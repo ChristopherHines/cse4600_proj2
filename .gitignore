@@ -1,2 +1,3 @@
 processes.txt
-a.out
+*.out
+*.o
