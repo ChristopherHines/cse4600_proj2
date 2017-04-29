@@ -2,7 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-void fifo(int processes[][5], int total);
+struct Processes
+{
+  int job,
+      arrival,
+      runtime,
+      priority,
+      start,
+      endtime,
+      turnaround,
+      wait,
+      response;
+};
+
+void fifo(struct Processes process[51], int total);
+void print(struct Processes process[51], int total);
 
 int main (int argc, char **argv) {
   if(argc == 1) {
@@ -11,7 +25,7 @@ int main (int argc, char **argv) {
   }
 
   char *scheduler = argv[1];
-  int processes[51][5];
+  struct Processes process[51];
   char buff[20];
   int val, totalProcesses = 0;
 
@@ -21,27 +35,33 @@ int main (int argc, char **argv) {
   while(fgets(buff, 255, (FILE*)fp) != NULL) {
     totalProcesses++;
   }
-  totalProcesses--;
+  //totalProcesses--;
   rewind(fp);
 
   // Build 2D process array
   int i, j;
   for(i = 1; i <= totalProcesses; i++) {
-    processes[i][0] = i;
+    process[i].job = i;
     for(j = 0; j <= 3; j++) {
       fscanf(fp, "%s", buff);
-      
-      if(j % 4 != 0) {
-        val = strtol(buff, (char **)NULL, 10);
-        processes[i][j] = val;
+      val = strtol(buff, (char **)NULL, 10);
+      if(j % 4 == 1) {
+        process[i].arrival = val;
+      }
+      else if(j % 4 == 2) {
+        process[i].runtime = val;
+      }
+      else if(j % 4 == 3) {
+        process[i].priority = val;
       }
     }
   }
 
+  print(process, totalProcesses);
 
   if (strcmp(scheduler, "fifo") == 0) {
     printf("Running FIFO\n");
-    fifo(processes, totalProcesses);
+    fifo(process, totalProcesses);
   }
   else if (strcmp(scheduler, "srt") == 0) {
     printf("Running SRT\n");
@@ -57,12 +77,19 @@ int main (int argc, char **argv) {
 return 0;
 }
 
-void fifo(int processes[][5], int total) {
+void fifo(struct Processes process[51], int total) {
 /* 1) Make a ready queue
    2) Look at first process runtime
    3) Put all processes within runtime in ready queue then sort by priority
 */
-  int readyQueue[51];
-  int processChart[51][10];
+}
 
+void print(struct Processes process[51], int total) {
+  int i;
+  for(i = 1; i <= total; i++) {
+    printf("P%d %d %d %d\n", process[i].job, 
+                             process[i].arrival, 
+                             process[i].runtime, 
+                             process[i].priority);
+  }
 }
