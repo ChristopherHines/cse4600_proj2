@@ -39,7 +39,7 @@ int main (int argc, char **argv) {
   }
 
   // Generate 50 random processes
-  for(i = 1; i <= 50; i++) {
+  for(i = 0; i <= 50; i++) {
     j = 0;
     arrival = randomNumber5();
     burst = randomNumber5() + 5;
