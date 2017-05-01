@@ -39,7 +39,7 @@ int main (int argc, char **argv) {
   }
 
   // Generate 50 random processes
-  for(i = 0; i <= 50; i++) {
+  for(i = 1; i <= 50; i++) {
     j = 0;
     arrival = randomNumber5();
     burst = randomNumber5() + 5;
@@ -54,6 +54,9 @@ int main (int argc, char **argv) {
   // Sort by arrival time
   qsort (processes, sizeof(processes)/sizeof(*processes), sizeof(*processes), comp);
 
+  processes[1][1] = 0;
+  processes[1][2] = 20;
+  processes[1][3] = 1;
   // Write processes to file
   for(i = 1; i <= 50; i++) {
     j = 0;

@@ -11,7 +11,7 @@ struct Processes
       start,
       endtime,
       turnaround,
-      wait,
+      waittime,
       response;
 };
 
@@ -20,7 +20,8 @@ void print(struct Processes process[51], int total);
 
 int main (int argc, char **argv) {
   if(argc == 1) {
-    printf("Invalid Execute: Please state scheduler\nex. ./a.out fifo\n");
+    printf("Invalid Execute: Please state scheduler\n");
+    printf("usage ./a.out [fifo, srt, sjf]\n");
     return 0;
   }
 
@@ -35,10 +36,9 @@ int main (int argc, char **argv) {
   while(fgets(buff, 255, (FILE*)fp) != NULL) {
     totalProcesses++;
   }
-  //totalProcesses--;
   rewind(fp);
 
-  // Build 2D process array
+  // Build struct process array
   int i, j;
   for(i = 1; i <= totalProcesses; i++) {
     process[i].job = i;
@@ -57,7 +57,7 @@ int main (int argc, char **argv) {
     }
   }
 
-  print(process, totalProcesses);
+  //print(process, totalProcesses);
 
   if (strcmp(scheduler, "fifo") == 0) {
     printf("Running FIFO\n");
@@ -81,15 +81,51 @@ void fifo(struct Processes process[51], int total) {
 /* 1) Make a ready queue
    2) Look at first process runtime
    3) Put all processes within runtime in ready queue then sort by priority
+   
+   Start time = Clock time
+   End time = Clock time + runtime
+   Turnaround = Endtime - Arrival time
+   Wait time = Start time - Arrival time
+   Response time = Start time - Arrival time
 */
+  struct Processes current;
+  int clock = 0;
+  int complete = 0;
+  int i;
+
+  process[1].start = 0;
+  process[1].endtime = process[1].runtime;
+  process[1].turnaround = process[1].endtime;
+  process[1].waittime = 0;
+  process[1].response = 0;
+  current = process[1];
+  for(i = 2; i <= 50; i++) {
+    clock += current.runtime;
+    process[i].start = clock;
+    process[i].endtime = clock + process[i].runtime;
+    process[i].turnaround = process[i].endtime - process[i].arrival;
+    process[i].waittime = process[i].start - process[i].arrival;
+    process[i].response = process[i].start - process[i].arrival;
+    current = process[i];
+  }
+
+  print(process, total);
 }
 
 void print(struct Processes process[51], int total) {
   int i;
+  printf("===> FIFO\n");
+  printf("JOB\t ARIV\t RUNT\t PRIO\t STRT\t ENDT\t TURN\t WAIT\t RESP\t\n");
+  printf("---------------------------------------------------------------------\n");
   for(i = 1; i <= total; i++) {
-    printf("P%d %d %d %d\n", process[i].job, 
+    printf("P%2d\t %3d\t %3d\t %2d\t %4d\t %4d\t %4d\t %4d\t %4d\n", process[i].job, 
                              process[i].arrival, 
                              process[i].runtime, 
-                             process[i].priority);
+                             process[i].priority,
+                             process[i].start,
+                             process[i].endtime,
+                             process[i].turnaround,
+                             process[i].waittime,
+                             process[i].response);
   }
 }
