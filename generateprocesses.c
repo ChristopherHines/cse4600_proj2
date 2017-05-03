@@ -4,13 +4,7 @@
 
 /* Function to randomly generate a number that is a multiple of 5 */
 int randomNumber5() {
-  int n = 1;
-
-  while (n % 5 != 0) {
-    n = rand() % 300;
-  } 
-
-  return n;
+  return (rand() % 60) * 5;
 }
 
 /* Comparison function for qSort.
@@ -27,7 +21,7 @@ int comp (const void * elem1, const void * elem2)
 int main (int argc, char **argv) {
   int processes[51][5]; // 2D array that holds 50 processeses and its variables
   int arrival, burst, priority;
-  int i, j;
+  int i;
 
   FILE *f = fopen("processes.txt", "w");
   srand(time(NULL));
@@ -39,29 +33,25 @@ int main (int argc, char **argv) {
   }
 
   // Generate 50 random processes
-  for(i = 1; i <= 50; i++) {
-    j = 0;
+  for(i = 0; i < 50; i++) {
     arrival = randomNumber5();
     burst = randomNumber5() + 5;
     priority = rand() % 20 + 1;
     
-    processes[i][j] = i;
-    processes[i][j+1] = arrival;
-    processes[i][j+2] = burst;
-    processes[i][j+3] = priority;
+    processes[i][0] = i;
+    processes[i][1] = arrival;
+    processes[i][2] = burst;
+    processes[i][3] = priority;
   }
 
   // Sort by arrival time
   qsort (processes, sizeof(processes)/sizeof(*processes), sizeof(*processes), comp);
 
-  processes[1][1] = 0;
-  processes[1][2] = 20;
-  processes[1][3] = 1;
+  processes[0][1] = 0; //Make first process arrive at 0;
   // Write processes to file
-  for(i = 1; i <= 50; i++) {
-    j = 0;
-    processes[i][j] = i;
-    fprintf(f, "P%d %d %d %d\n", processes[i][j], processes[i][j+1], processes[i][j+2], processes[i][j+3]);
+  for(i = 0; i < 50; i++) {
+    processes[i][0] = i+1;
+    fprintf(f, "P%d %d %d %d\n", processes[i][0], processes[i][1], processes[i][2], processes[i][3]);
   }
 
   fclose(f);
