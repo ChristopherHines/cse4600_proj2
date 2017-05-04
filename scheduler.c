@@ -206,6 +206,7 @@ void rr(struct Processes process[51], int total) {
 void sjf(struct Processes process[51], int total) {
   //job, arrival, runtime, priority, start, endtime, turnaround, wait, response
   int i, j, k, r, u;//I explain what these are used for when they are used in loops
+  int flag = 0;
   int clock = 0;
   int counter = 0;
   int smallest = 1; //keep track of shortest runtime process that have arrived
@@ -218,8 +219,12 @@ void sjf(struct Processes process[51], int total) {
   process[1].waittime = 0;
   process[1].response = 0;
   process[1].priority = 0;
+  process[1].arrival = 0;
   current = process[1];
   
+  
+  if(flag == 1)
+  {
   for(r=1; r<=total; r++)//goes through all 50 processes
   {
     for(k=1; k<=total; k++)//figures out how many processes have arrived
@@ -240,7 +245,9 @@ void sjf(struct Processes process[51], int total) {
       } 
     }
     done[smallest] = 1;//mark the smallest runtime process as 'done'
-
+  }
+    flag = 1;
+      
     process[smallest].start = clock;//record the start time before we increment
     clock = clock + process[smallest].runtime;
     
