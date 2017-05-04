@@ -1,3 +1,13 @@
+/*
+*    Names: Sam Akardet Tancharoensuksavai
+*           Stephen Kenney
+*           Christopher Hines
+*    Course: 4600 Operating Systems
+*    Date: 5/4/2017
+*    Description: This is a simple program that creates a text file of 
+*                 fifty random processes
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -19,7 +29,7 @@ int comp (const void * elem1, const void * elem2)
 }
 
 int main (int argc, char **argv) {
-  int processes[51][5]; // 2D array that holds 50 processeses and its variables
+  int processes[52][5]; // 2D array that holds 50 processeses and its variables
   int arrival, burst, priority;
   int i;
 
@@ -33,7 +43,7 @@ int main (int argc, char **argv) {
   }
 
   // Generate 50 random processes
-  for(i = 0; i < 50; i++) {
+  for(i = 1; i <= 50; i++) {
     arrival = randomNumber5();
     burst = randomNumber5() + 5;
     priority = rand() % 20 + 1;
@@ -47,10 +57,12 @@ int main (int argc, char **argv) {
   // Sort by arrival time
   qsort (processes, sizeof(processes)/sizeof(*processes), sizeof(*processes), comp);
 
-  processes[0][1] = 0; //Make first process arrive at 0;
+  processes[1][1] = 0;
+  processes[1][2] = 20;
+  processes[1][3] = 1;
   // Write processes to file
-  for(i = 0; i < 50; i++) {
-    processes[i][0] = i+1;
+  for(i = 1; i <= 50; i++) {
+    processes[i][0] = i;
     fprintf(f, "P%d %d %d %d\n", processes[i][0], processes[i][1], processes[i][2], processes[i][3]);
   }
 
