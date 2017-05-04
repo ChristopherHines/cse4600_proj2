@@ -29,7 +29,7 @@ int comp (const void * elem1, const void * elem2)
 }
 
 int main (int argc, char **argv) {
-  int processes[52][5]; // 2D array that holds 50 processeses and its variables
+  int processes[51][5]; // 2D array that holds 50 processeses and its variables
   int arrival, burst, priority;
   int i;
 
@@ -43,7 +43,7 @@ int main (int argc, char **argv) {
   }
 
   // Generate 50 random processes
-  for(i = 0; i <= 50; i++) {
+  for(i = 0; i < 50; i++) {
     arrival = randomNumber5();
     burst = randomNumber5() + 5;
     priority = rand() % 20 + 1;
@@ -58,7 +58,7 @@ int main (int argc, char **argv) {
   qsort (processes, sizeof(processes)/sizeof(*processes), sizeof(*processes), comp);
 
   // Write processes to file
-  for(i = 0; i <= 50; i++) {
+  for(i = 0; i < 50; i++) {
     processes[i][0] = i+1;
     fprintf(f, "P%d %d %d %d\n", processes[i][0], processes[i][1], processes[i][2], processes[i][3]);
   }

@@ -7,7 +7,7 @@
 *    Description: This is a simple program that computes the different
 *    variables for assessing the various types of schedulers. This program 
 *    accepts an input file of processes (see generateprocesses.c)
-*    and generates a schedule according to what you select: FIFO, RR, or SRT.
+*    and generates a schedule according to what you select: FIFO, RR, or sjf.
 */
 
 #include <stdio.h>
@@ -30,15 +30,15 @@ struct Processes
 int comp (const void * elem1, const void * elem2);
 void fifo(struct Processes process[51], int total);
 void rr(struct Processes process[51], int total);
-void srt(struct Processes process[51], int total);
+void sjf(struct Processes process[51], int total);
 void print(struct Processes process[51], int total, char *scheduler, int switches);
-void srtprint(struct Processes process[51], int total, char *scheduler);
+void sjfprint(struct Processes process[51], int total, char *scheduler);
 
 int main (int argc, char **argv) {
   // Check whether the user imput a specific scheduling algorithm 
   if(argc == 1) {
     printf("Invalid Execute: Please state scheduler\n");
-    printf("usage ./a.out [fifo, srt, rr]\n");
+    printf("usage ./a.out [fifo, sjf, rr]\n");
     return 0;
   }
 
@@ -78,9 +78,9 @@ int main (int argc, char **argv) {
     printf("Running FIFO\n");
     fifo(process, totalProcesses);
   }
-  else if (strcmp(scheduler, "srt") == 0) {
-    printf("Running SRT\n");
-    srt(process, totalProcesses);
+  else if (strcmp(scheduler, "sjf") == 0) {
+    printf("Running SJF\n");
+    sjf(process, totalProcesses);
   }
   else if (strcmp(scheduler, "rr") == 0) {
     printf("Running RR\n");
@@ -100,10 +100,7 @@ int comp (const void * elem1, const void * elem2) //used to sort runtimes for RR
 }
 
 void fifo(struct Processes process[51], int total) {
-/* 1) Make a ready queue
-   2) Look at first process runtime
-   3) Put all processes within runtime in ready queue then sort by priority
-   
+/*
    Start time = Clock time
    End time = Clock time + runtime
    Turnaround = Endtime - Arrival time
@@ -206,7 +203,7 @@ void rr(struct Processes process[51], int total) {
   print(process, total, "RR", switches);
 }
 
-void srt(struct Processes process[51], int total) {
+void sjf(struct Processes process[51], int total) {
   //job, arrival, runtime, priority, start, endtime, turnaround, wait, response
   int i, j, k, r, u;//I explain what these are used for when they are used in loops
   int clock = 0;
@@ -291,7 +288,7 @@ void srt(struct Processes process[51], int total) {
   }
   resp_average = (float)sum/(float)total;
   
-  srtprint(process, total, "SRT");//print processes
+  sjfprint(process, total, "SJF");//print processes
   
   printf("---------------------------------------------------------------------\n");
   printf("Average Turnaround Time\t\t= %f\n", turn_average);
@@ -331,7 +328,7 @@ void print(struct Processes process[51], int total, char *scheduler, int switche
   printf("Number Context Switches\t\t= %4d\n", switches);
 }
 
-void srtprint(struct Processes process[51], int total, char *scheduler) {
+void sjfprint(struct Processes process[51], int total, char *scheduler) {
   int i;
   printf("===> %s\n", scheduler);
   printf("'LIST' is the order that the processes are run in.\n");
